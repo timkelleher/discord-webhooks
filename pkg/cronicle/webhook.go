@@ -18,7 +18,7 @@ type WebHookRequest struct {
 	JobType   string            `json:"action"`
 	Title     string            `json:"event_title"`
 	Code      int               `json:"code"`
-	Elapsed   int               `json:"elapsed"`
+	Elapsed   float32           `json:"elapsed"`
 	TimeStart string            `json:"time_start"`
 	TimeEnd   string            `json:"time_end"`
 	URL       string            `json:"job_details_url"`
@@ -69,7 +69,8 @@ func (whp WebHookPayload) TimeEnd() string {
 }
 
 func (whp WebHookPayload) Duration() time.Duration {
-	return time.Duration(whp.payload.Elapsed) * time.Second
+	seconds := time.Duration(whp.payload.Elapsed)
+	return seconds * time.Second
 }
 
 func (whp WebHookPayload) URL() string {
