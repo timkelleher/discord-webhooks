@@ -33,8 +33,8 @@ func generateInfo(data DiscordWebHook) string {
 	}
 	embed = fmt.Sprintf("Duration: %v\n"+embed, data.Duration())
 
-	if data.Success() {
-		embed += "<@Tim>\n"
+	if !data.Success() {
+		embed += "\n@everyone\n"
 	}
 
 	return embed

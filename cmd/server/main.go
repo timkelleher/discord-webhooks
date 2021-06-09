@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
-	"github.com/timkelleher.com/discord-webhooks/pkg/cronicle"
 	"github.com/timkelleher.com/discord-webhooks/pkg/discord"
+	"github.com/timkelleher.com/discord-webhooks/pkg/integrations/cronicle"
 )
 
 func main() {
