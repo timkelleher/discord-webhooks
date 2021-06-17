@@ -17,6 +17,7 @@ const (
 )
 
 type DiscordWebHook interface {
+	Integration() string
 	ID() string
 	JobType() JobType
 	Title() string

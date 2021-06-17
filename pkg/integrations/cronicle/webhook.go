@@ -31,6 +31,10 @@ type WebHookPayload struct {
 	payload WebHookRequest
 }
 
+func (whp WebHookPayload) Integration() string {
+	return "Cronicle"
+}
+
 func (whp WebHookPayload) ID() string {
 	return whp.payload.ID
 }

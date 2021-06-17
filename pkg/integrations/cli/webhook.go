@@ -22,6 +22,10 @@ type DevPayload struct {
 	Succeeded    bool
 }
 
+func (dp DevPayload) Integration() string {
+	return "CLI"
+}
+
 func (dp DevPayload) ID() string {
 	return "1"
 }

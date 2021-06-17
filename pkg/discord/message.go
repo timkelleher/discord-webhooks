@@ -22,8 +22,10 @@ func Create(data DiscordWebHook) *discordhook.WebhookExecuteParams {
 
 func generateInfo(data DiscordWebHook) string {
 	embed := fmt.Sprintf(
-		"Host: %s\n"+
+		"Source: %s\n"+
+			"Host: %s\n"+
 			"Job ID: %s (%s)\n",
+		data.Integration(),
 		data.Host(),
 		data.ID(),
 		data.URL(),
