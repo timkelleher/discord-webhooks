@@ -8,12 +8,12 @@ import (
 	"github.com/timkelleher.com/discord-webhooks/pkg/discord"
 )
 
-func NewPayload(data WebHookRequest) *WebHookPayload {
-	return &WebHookPayload{payload: data}
+func NewPayload(data CronicleRequest) *CroniclePayload {
+	return &CroniclePayload{payload: data}
 }
 
 //https://github.com/jhuckaby/Cronicle#event-web-hook
-type WebHookRequest struct {
+type CronicleRequest struct {
 	ID        string            `json:"id"`
 	JobType   string            `json:"action"`
 	Title     string            `json:"event_title"`
@@ -27,26 +27,26 @@ type WebHookRequest struct {
 	Params    map[string]string `json:"params"`
 }
 
-type WebHookPayload struct {
-	payload WebHookRequest
+type CroniclePayload struct {
+	payload CronicleRequest
 }
 
-func (whp WebHookPayload) Integration() string {
+func (whp CroniclePayload) Integration() string {
 	return "Cronicle"
 }
 
-func (whp WebHookPayload) ID() string {
+func (whp CroniclePayload) ID() string {
 	return whp.payload.ID
 }
 
-func (whp WebHookPayload) JobType() discord.JobType {
+func (whp CroniclePayload) JobType() discord.JobType {
 	if whp.payload.JobType == "job_start" {
 		return discord.JobStarted
 	}
 	return discord.JobCompleted
 }
 
-func (whp WebHookPayload) Title() string {
+func (whp CroniclePayload) Title() string {
 	if whp.payload.JobType == "job_start" {
 		return "Start: " + whp.payload.Title
 	}
@@ -60,36 +60,36 @@ func (whp WebHookPayload) Title() string {
 	return fmt.Sprintf("Completed: %s (%s)", whp.payload.Title, result)
 }
 
-func (whp WebHookPayload) Success() bool {
+func (whp CroniclePayload) Success() bool {
 	return whp.payload.Code == 0
 }
 
-func (whp WebHookPayload) TimeStart() string {
+func (whp CroniclePayload) TimeStart() string {
 	return whp.payload.TimeStart
 }
 
-func (whp WebHookPayload) TimeEnd() string {
+func (whp CroniclePayload) TimeEnd() string {
 	return whp.payload.TimeEnd
 }
 
-func (whp WebHookPayload) Duration() time.Duration {
+func (whp CroniclePayload) Duration() time.Duration {
 	seconds := time.Duration(whp.payload.Elapsed)
 	return seconds * time.Second
 }
 
-func (whp WebHookPayload) URL() string {
+func (whp CroniclePayload) URL() string {
 	return whp.payload.URL
 }
 
-func (whp WebHookPayload) Source() string {
+func (whp CroniclePayload) Source() string {
 	return whp.payload.Source
 }
 
-func (whp WebHookPayload) Host() string {
+func (whp CroniclePayload) Host() string {
 	return whp.payload.Host
 }
 
-func (whp WebHookPayload) WebHookID() int {
+func (whp CroniclePayload) WebHookID() int {
 	id, err := strconv.Atoi(whp.payload.Params["discord_webhook_id"])
 	if err != nil {
 		return 0
@@ -97,6 +97,6 @@ func (whp WebHookPayload) WebHookID() int {
 	return id
 }
 
-func (whp WebHookPayload) WebHookToken() string {
+func (whp CroniclePayload) WebHookToken() string {
 	return whp.payload.Params["discord_webhook_token"]
 }

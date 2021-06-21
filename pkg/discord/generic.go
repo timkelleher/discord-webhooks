@@ -3,40 +3,19 @@ package discord
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/andersfylling/snowflake"
 	"github.com/nickname32/discordhook"
 )
 
-type JobType int
-
-const (
-	JobStarted JobType = iota
-	JobCompleted
-)
-
-type DiscordWebHook interface {
+type GenericWebHook interface {
 	Integration() string
-	ID() string
-	JobType() JobType
 	Title() string
-	Success() bool
-	TimeStart() string
-	TimeEnd() string
-	Duration() time.Duration
-	URL() string
-	Source() string
-	Host() string
-}
-
-type DiscordConfig interface {
-	WebHookID() int
-	WebHookToken() string
+	Content() string
 }
 
 //https://pkg.go.dev/github.com/nickname32/discordhook
-func NewWebHook(conf DiscordConfig, data DiscordWebHook) {
+func NewGenericWebHook(conf DiscordConfig, data GenericWebHook) {
 	wa, err := discordhook.NewWebhookAPI(snowflake.Snowflake(conf.WebHookID()), conf.WebHookToken(), true, nil)
 	if err != nil {
 		panic(err)
@@ -51,15 +30,15 @@ func NewWebHook(conf DiscordConfig, data DiscordWebHook) {
 	}
 	fmt.Println("Webhook identified:", wh.Name)
 
-	msgParams := Create(data)
-
-	// Some jobs are so fast, Cronicle seems to publish complete events
-	// before start events, or it's batched or something.
-	if data.JobType() == JobCompleted {
-		time.Sleep(1 * time.Second)
+	params := &discordhook.WebhookExecuteParams{}
+	params.Embeds = []*discordhook.Embed{
+		{
+			Title:       data.Title(),
+			Description: data.Content(),
+		},
 	}
 
-	msg, err := wa.Execute(ctx, msgParams, nil, "")
+	msg, err := wa.Execute(ctx, params, nil, "")
 	if err != nil {
 		fmt.Println("Failed to publish message:")
 		panic(err)
